@@ -1,4 +1,4 @@
-package by.faeton.helper.config;
+package by.faeton.schedule_helper.config;
 
 
 import lombok.RequiredArgsConstructor;

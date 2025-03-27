@@ -1,4 +1,4 @@
-package by.faeton.helper.config;
+package by.faeton.schedule_helper.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

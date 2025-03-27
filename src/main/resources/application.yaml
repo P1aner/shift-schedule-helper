@@ -3,8 +3,12 @@ bot:
   botToken: ${BOT_TOKEN}
   sheetId: ${SHEET_ID}
   apiKey: ${API_KEY}
+  sheetName: subs
+  range: A1:A10
 spring:
   config:
     import: optional:file:.env[.properties]
-server:
-  port: 9091
+  main:
+    web-application-type: NONE
+cache:
+  expireTime: 60

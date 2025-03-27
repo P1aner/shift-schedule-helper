@@ -1,1 +1,1 @@
-rootProject.name = "shift_schedule_helper"
+rootProject.name = "shift-schedule-helper"

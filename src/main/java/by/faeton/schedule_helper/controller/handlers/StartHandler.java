@@ -1,5 +1,7 @@
-package by.faeton.helper.controller.handlers;
+package by.faeton.schedule_helper.controller.handlers;
 
+import by.faeton.schedule_helper.controller.TelegramCommand;
+import by.faeton.schedule_helper.controller.TelegramDefaultMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class StartHandler implements Handler {
-
-
 
     @Override
     public boolean isAppropriateTypeMessage(Update update) {

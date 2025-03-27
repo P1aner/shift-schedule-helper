@@ -1,4 +1,4 @@
-package by.faeton.helper.exception;
+package by.faeton.schedule_helper.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

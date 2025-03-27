@@ -1,4 +1,4 @@
-package by.faeton.helper.controller;
+package by.faeton.schedule_helper.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ public class MessageSender {
 
     private static final String USER_MESSAGE_ARRIVED = "User {} message arrived.";
     private static final String USER_MESSAGE_NOT_ARRIVED = "User {} message not arrived.";
+
     private final TelegramClient telegramClient;
 
     public void sendUserMessage(BotApiMethod<?> sendMessage) {

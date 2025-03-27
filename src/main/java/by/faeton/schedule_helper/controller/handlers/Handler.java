@@ -1,6 +1,6 @@
-package by.faeton.helper.controller.handlers;
+package by.faeton.schedule_helper.controller.handlers;
 
-import by.faeton.helper.exception.ResourceNotFoundException;
+import by.faeton.schedule_helper.exception.ResourceNotFoundException;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

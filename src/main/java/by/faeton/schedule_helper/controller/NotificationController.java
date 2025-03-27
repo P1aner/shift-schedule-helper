@@ -1,10 +1,10 @@
-package by.faeton.helper.controller;
+package by.faeton.schedule_helper.controller;
 
-import by.faeton.helper.controller.handlers.TelegramDefaultMessages;
-import by.faeton.helper.exception.ResourceNotFoundException;
-import by.faeton.helper.model.Task;
-import by.faeton.helper.services.ScheduleService;
-import by.faeton.helper.services.SheetListener;
+import by.faeton.schedule_helper.config.BotConfig;
+import by.faeton.schedule_helper.exception.ResourceNotFoundException;
+import by.faeton.schedule_helper.model.Task;
+import by.faeton.schedule_helper.services.ScheduleService;
+import by.faeton.schedule_helper.services.SheetListener;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,44 +26,38 @@ public class NotificationController {
     private final MessageSender messageSender;
     private final List<String> subscribersId;
     private final SheetListener sheetListener;
+    private final BotConfig botConfig;
 
-    private final List<Task> arrived;
-
-    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
-    public void perOneHour() {
-        Task nextTask = scheduleService.getNextTask();
-
-        long minutes = Duration.between(LocalDateTime.now(), nextTask.getDate()).toMinutes();
-
-        boolean contains = arrived.contains(nextTask);
-        if (minutes < 60 && !contains) {
-            arrived.add(nextTask);
-            subscribersId.forEach(sub -> messageSender.sendUserMessage(SendMessage.builder()
-                .chatId(sub)
-                .text(TelegramDefaultMessages.HOUR_NOTICE)
-                .build()));
-        }
-    }
+    private final List<Task> arrivedPerHour;
+    private final List<Task> arrivedPerTenMinutes;
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
-    public void perTenMinutes() {
-        Task nextTask = scheduleService.getNextTask();
+    public void perOneHour() {
+        arrive(arrivedPerHour, 60, TelegramDefaultMessages.HOUR_NOTICE);
+    }
 
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+    public void perTenMinutes() {
+        arrive(arrivedPerTenMinutes, 10, TelegramDefaultMessages.TEN_MINUTES_NOTICE);
+    }
+
+    private void arrive(List<Task> arrivedPerX, int x, String message) {
+        Task nextTask = scheduleService.getNextTask();
         long minutes = Duration.between(LocalDateTime.now(), nextTask.getDate()).toMinutes();
 
-        boolean contains = arrived.contains(nextTask);
-        if (minutes < 10 && !contains) {
-            arrived.add(nextTask);
+        boolean contains = arrivedPerX.contains(nextTask);
+        if (minutes < x && !contains) {
+            arrivedPerX.add(nextTask);
             subscribersId.forEach(sub -> messageSender.sendUserMessage(SendMessage.builder()
                 .chatId(sub)
-                .text(TelegramDefaultMessages.HOUR_NOTICE)
+                .text(message)
                 .build()));
         }
     }
 
     @PostConstruct
     private void init() {
-        List<List<String>> arrayLists = sheetListener.getSheetList("subs", "A1:A10")
+        List<List<String>> arrayLists = sheetListener.getSheetList(botConfig.sheetName(), botConfig.range())
             .orElseThrow(() -> new ResourceNotFoundException("Subscribers not found"));
         subscribersId.addAll(arrayLists.stream()
             .flatMap(Collection::stream)

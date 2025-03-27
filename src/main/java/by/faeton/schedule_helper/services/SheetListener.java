@@ -1,13 +1,12 @@
-package by.faeton.helper.services;
+package by.faeton.schedule_helper.services;
 
-import by.faeton.helper.config.BotConfig;
+import by.faeton.schedule_helper.config.BotConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ public class SheetListener {
             sheetListName,
             fields.isEmpty() ? "" : "!" + fields,
             botConfig.apiKey());
-
         return restClient
             .get()
             .uri(url)
@@ -40,10 +38,6 @@ public class SheetListener {
     public Optional<List<List<String>>> getSheetList(String sheetListName, String fields) {
         String sheetJSON = getSheetJSON(sheetListName, fields);
         return convertJSONToList(sheetJSON);
-    }
-
-    public Optional<List<List<String>>> getSheetList(String list) {
-        return getSheetList(list, "");
     }
 
     private Optional<List<List<String>>> convertJSONToList(String text) {

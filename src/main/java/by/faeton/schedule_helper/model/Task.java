@@ -1,4 +1,4 @@
-package by.faeton.helper.model;
+package by.faeton.schedule_helper.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

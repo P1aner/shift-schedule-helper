@@ -1,4 +1,4 @@
-package by.faeton.schedule_helper.controller.handlers;
+package by.faeton.schedule_helper.controller;
 
 import lombok.experimental.UtilityClass;
 

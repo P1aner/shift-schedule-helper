@@ -1,7 +1,8 @@
-package by.faeton.helper.controller.handlers;
+package by.faeton.schedule_helper.controller.handlers;
 
-import by.faeton.helper.model.Task;
-import by.faeton.helper.services.ScheduleService;
+import by.faeton.schedule_helper.controller.TelegramCommand;
+import by.faeton.schedule_helper.model.Task;
+import by.faeton.schedule_helper.services.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class ScheduleHandler implements Handler {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", new Locale("ru"));
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", new Locale("ru"));
 
     private final ScheduleService scheduleService;
 
@@ -38,7 +39,7 @@ public class ScheduleHandler implements Handler {
         Long chatId = getChatId(update);
 
         String message = tasks.stream()
-            .map(task -> "%s %s %s".formatted(formatter.format(task.getDate()), task.getName(), task.getTeacher()))
+            .map(task -> "%s %s %s".formatted(DATE_TIME_FORMATTER.format(task.getDate()), task.getName(), task.getTeacher()))
             .collect(Collectors.joining("\n"));
 
         sendMessages.add(SendMessage.builder()

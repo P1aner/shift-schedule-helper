@@ -1,7 +1,7 @@
-package by.faeton.helper.controller;
+package by.faeton.schedule_helper.controller;
 
-import by.faeton.helper.config.BotConfig;
-import by.faeton.helper.controller.handlers.Handler;
+import by.faeton.schedule_helper.config.BotConfig;
+import by.faeton.schedule_helper.controller.handlers.Handler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

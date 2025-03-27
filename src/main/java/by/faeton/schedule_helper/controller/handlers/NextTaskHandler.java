@@ -1,6 +1,8 @@
-package by.faeton.helper.controller.handlers;
+package by.faeton.schedule_helper.controller.handlers;
 
-import by.faeton.helper.services.ScheduleService;
+import by.faeton.schedule_helper.controller.TelegramCommand;
+import by.faeton.schedule_helper.controller.TelegramDefaultMessages;
+import by.faeton.schedule_helper.services.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
@@ -16,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class NextTaskHandler implements Handler {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", new Locale("ru"));
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", new Locale("ru"));
 
 
     private final ScheduleService scheduleService;
@@ -35,7 +37,7 @@ public class NextTaskHandler implements Handler {
         Long chatId = getChatId(update);
 
         String message = Optional.of(scheduleService.getNextTask())
-            .map(task -> "%s %s %s".formatted(formatter.format(task.getDate()), task.getName(), task.getTeacher()))
+            .map(task -> "%s %s %s".formatted(DATE_TIME_FORMATTER.format(task.getDate()), task.getName(), task.getTeacher()))
             .orElse(TelegramDefaultMessages.NEXT_TASK_NOT_FOUND);
 
         sendMessages.add(SendMessage.builder()

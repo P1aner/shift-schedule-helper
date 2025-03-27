@@ -1,4 +1,4 @@
-package by.faeton.helper;
+package by.faeton.schedule_helper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

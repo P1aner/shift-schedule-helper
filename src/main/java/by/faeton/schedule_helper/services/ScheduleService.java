@@ -1,6 +1,6 @@
-package by.faeton.helper.services;
+package by.faeton.schedule_helper.services;
 
-import by.faeton.helper.model.Task;
+import by.faeton.schedule_helper.model.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,15 +21,15 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @Slf4j
 public class ScheduleService {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMM yyyy 'г.'", new Locale("ru"));
-    private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DEFAULT_PATTERN = DateTimeFormatter.ofPattern("EEEE d MMM yyyy 'г.'", new Locale("ru"));
+    private static final DateTimeFormatter DEFAULT_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private static final String URL = "https://koronatech.by/shift_java/schedule";
     private static final String START = "Неделя 1";
     private static final String END = "Выпускной; ";
 
     private final RestClient restClient;
 
-    @Cacheable("schedule")
+    @Cacheable("scheduleTask")
     public Task getNextTask() {
         List<Task> tasks = getTasks();
         return tasks.stream()
@@ -38,7 +38,7 @@ public class ScheduleService {
             .orElseThrow();
     }
 
-    @Cacheable("schedule")
+    @Cacheable("scheduleListOfTasks")
     public List<Task> getTasks() {
         String body = getBody(URL);
 
@@ -49,10 +49,10 @@ public class ScheduleService {
         LocalDate previousDate = null;
         for (List<String> strings : listOfSchedule) {
             if (strings.size() == 4) {
-                previousDate = LocalDate.parse(strings.get(0), formatter);
+                previousDate = LocalDate.parse(strings.get(0), DEFAULT_PATTERN);
                 String startTaskTimeString = strings.get(1).split(" - ")[0].trim();
                 try {
-                    LocalTime startTaskTime = LocalTime.parse(startTaskTimeString, formatterTime);
+                    LocalTime startTaskTime = LocalTime.parse(startTaskTimeString, DEFAULT_TIME_FORMATTER);
                     LocalDateTime taskDateTime = LocalDateTime.of(previousDate, startTaskTime);
                     tasks.add(new Task(taskDateTime, strings.get(2), strings.get(3)));
                 } catch (Exception e) {
@@ -61,7 +61,7 @@ public class ScheduleService {
                 }
             } else if (strings.size() == 3) {
                 String startTaskTimeString = strings.get(0).split(" - ")[0].trim();
-                LocalTime startTaskTime = LocalTime.parse(startTaskTimeString, formatterTime);
+                LocalTime startTaskTime = LocalTime.parse(startTaskTimeString, DEFAULT_TIME_FORMATTER);
                 LocalDateTime taskDateTime = LocalDateTime.of(previousDate, startTaskTime);
                 tasks.add(new Task(taskDateTime, strings.get(1), strings.get(2)));
             }
@@ -80,7 +80,7 @@ public class ScheduleService {
     private List<List<String>> getListOfSchedule(String body) {
         return trimString(body, START, END)
             .replace("&#039;", "'")
-            .replace(' ', ' ')
+            .replace('\u00A0', ' ')
             .lines()
             .filter(line -> !line.contains("Неделя "))
             .map(line -> Arrays.stream(line.split(";"))
