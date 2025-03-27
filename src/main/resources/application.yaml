@@ -1,0 +1,10 @@
+bot:
+  botName: ${BOT_NAME}
+  botToken: ${BOT_TOKEN}
+  sheetId: ${SHEET_ID}
+  apiKey: ${API_KEY}
+spring:
+  config:
+    import: optional:file:.env[.properties]
+server:
+  port: 9091
